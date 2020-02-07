@@ -1,8 +1,9 @@
 import Sequelize from 'sequelize';
 
+import User from '../api/models/User';
 import databaseConfig from '../config/database';
 
-const models = [];
+const models = [User];
 
 class Database {
   constructor() {
@@ -10,11 +11,13 @@ class Database {
   }
 
   postgres() {
-    this.pgConnection = new Sequelize(databaseConfig.sequelize);
+    this.pgConnection = new Sequelize(databaseConfig);
 
     models
       .map(model => model.init(this.pgConnection))
-      .map(model => model.associate && model.associate(this.pgConnection.models));
+      .map(
+        model => model.associate && model.associate(this.pgConnection.models)
+      );
   }
 }
 
