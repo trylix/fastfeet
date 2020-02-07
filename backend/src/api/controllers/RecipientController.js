@@ -5,17 +5,13 @@ import Recipient from '../models/Recipient';
 
 class RecipientController {
   async index(req, res) {
-    const recipients = await Recipient.findAll({
-      attributes: ['id', 'name', 'address'],
-    });
+    const recipients = await Recipient.getAll();
 
     return res.json(recipients);
   }
 
   async show(req, res) {
-    const recipient = await Recipient.findByPk(req.params.id, {
-      attributes: ['id', 'name', 'address'],
-    });
+    const recipient = await Recipient.getById(req.params.id);
 
     if (!recipient) {
       return res.status(401).json({ error: `Recipient does not exist.` });

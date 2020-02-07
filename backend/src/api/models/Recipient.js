@@ -41,6 +41,18 @@ class Recipient extends Model {
 
     return this;
   }
+
+  static async getAll() {
+    return this.findAll({
+      attributes: ['id', 'name', 'address'],
+    });
+  }
+
+  static async getById(id) {
+    return this.findByPk(id, {
+      attributes: ['id', 'name', 'address'],
+    });
+  }
 }
 
 export default Recipient;
