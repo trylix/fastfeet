@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 
+import DeliveriesController from './api/controllers/DeliveriesController';
 import DeliverymanController from './api/controllers/DeliverymanController';
 import FileController from './api/controllers/FileController';
 import MerchandiseController from './api/controllers/MerchandiseController';
@@ -14,6 +15,24 @@ const routes = new Router();
 const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
+
+routes.get(
+  '/deliverymans/:deliverymanId/deliveries',
+  DeliveriesController.index
+);
+routes.get(
+  '/deliverymans/:deliverymanId/deliveries/:deliveryId',
+  DeliveriesController.show
+);
+routes.post(
+  '/deliverymans/:deliverymanId/deliveries/:deliveryId',
+  DeliveriesController.store
+);
+routes.put(
+  '/deliverymans/:deliverymanId/deliveries/:deliveryId',
+  upload.single('file'),
+  DeliveriesController.update
+);
 
 /*
  * Todas as rotas após o authMiddleware, passará por uma validação da sessão

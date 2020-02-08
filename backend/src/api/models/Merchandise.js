@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { Model, Op } from 'sequelize';
 
 import Deliveryman from './Deliveryman';
 import File from './File';
@@ -87,6 +87,47 @@ class Merchandise extends Model {
           model: File,
           as: 'signature',
           attributes: ['id', 'url', 'path'],
+        },
+      ],
+    });
+  }
+
+  static async pending(id, page, limit) {
+    return this.findAll({
+      where: {
+        deliveryman_id: id,
+        canceled_at: null,
+        end_date: null,
+      },
+      attributes: ['id', 'product', 'start_date'],
+      limit,
+      offset: (page - 1) * limit,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: ['id', 'name', 'address'],
+        },
+      ],
+    });
+  }
+
+  static async delivered(id, page, limit) {
+    return this.findAll({
+      where: {
+        deliveryman_id: id,
+        end_date: {
+          [Op.not]: null,
+        },
+      },
+      attributes: ['id', 'product'],
+      limit,
+      offset: (page - 1) * limit,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: ['id', 'name', 'address'],
         },
       ],
     });

@@ -84,7 +84,7 @@ class MerchandiseController {
 
     const { recipient_id, deliveryman_id } = req.body;
 
-    if (recipient_id && recipient_id !== merchandise.recipient.id) {
+    if (recipient_id && recipient_id != merchandise.recipient.id) {
       const recipientExists = await Recipient.findByPk(recipient_id);
 
       if (!recipientExists) {
@@ -92,7 +92,7 @@ class MerchandiseController {
       }
     }
 
-    if (deliveryman_id && deliveryman_id !== merchandise.deliveryman.id) {
+    if (deliveryman_id && deliveryman_id != merchandise.deliveryman.id) {
       const deliverymanExists = await Deliveryman.findByPk(deliveryman_id);
 
       if (!deliverymanExists) {
