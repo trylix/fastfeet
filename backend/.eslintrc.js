@@ -28,7 +28,6 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
-    'eqeqeq': 'off', 
     'linebreak-style': 'off',
     'class-methods-use-this': 'off',
     'no-param-reassign': 'off',

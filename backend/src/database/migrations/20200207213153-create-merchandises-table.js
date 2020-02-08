@@ -14,8 +14,8 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true,
+        onDelete: 'CASCADE',
+        allowNull: false,
       },
       deliveryman_id: {
         type: Sequelize.INTEGER,
@@ -25,7 +25,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true,
       },
       product: {
         type: Sequelize.STRING,

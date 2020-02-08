@@ -47,9 +47,9 @@ class DeliveriesController {
   async show(req, res) {
     const { deliverymanId, deliveryId } = req.params;
 
-    const deliverymanExists = await Deliveryman.findByPk(deliverymanId);
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverymanExists) {
+    if (!deliveryman) {
       return res.status(400).json({ error: 'Delivery man not exists. ' });
     }
 
@@ -59,7 +59,7 @@ class DeliveriesController {
       return res.status(401).json({ error: 'Merchandise not exists.' });
     }
 
-    if (deliverymanId != merchandise.deliveryman.id) {
+    if (deliveryman.id !== merchandise.deliveryman.id) {
       return res
         .status(401)
         .json({ error: 'This merchandise is not registered for you.' });
@@ -77,9 +77,9 @@ class DeliveriesController {
   async store(req, res) {
     const { deliverymanId, deliveryId } = req.params;
 
-    const deliverymanExists = await Deliveryman.findByPk(deliverymanId);
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverymanExists) {
+    if (!deliveryman) {
       return res.status(400).json({ error: 'Delivery man not exists. ' });
     }
 
@@ -89,7 +89,7 @@ class DeliveriesController {
       return res.status(401).json({ error: 'Merchandise not exists.' });
     }
 
-    if (deliverymanId != merchandise.deliveryman.id) {
+    if (deliveryman.id !== merchandise.deliveryman.id) {
       return res
         .status(401)
         .json({ error: 'This merchandise is not registered for you.' });
@@ -116,7 +116,7 @@ class DeliveriesController {
     const date = new Date();
     const currentHour = getHours(date);
 
-    if (currentHour > 8 && !(currentHour < 19)) {
+    if (!(currentHour >= 8 && currentHour < 19)) {
       return res.status(401).json({ error: 'Outside working hours.' });
     }
 
@@ -154,9 +154,9 @@ class DeliveriesController {
 
     const { deliverymanId, deliveryId } = req.params;
 
-    const deliverymanExists = await Deliveryman.findByPk(deliverymanId);
+    const deliveryman = await Deliveryman.findByPk(deliverymanId);
 
-    if (!deliverymanExists) {
+    if (!deliveryman) {
       return res.status(400).json({ error: 'Delivery man not exists. ' });
     }
 
@@ -166,7 +166,7 @@ class DeliveriesController {
       return res.status(401).json({ error: 'Merchandise not exists.' });
     }
 
-    if (deliverymanId != merchandise.deliveryman.id) {
+    if (deliveryman.id !== merchandise.deliveryman.id) {
       return res
         .status(401)
         .json({ error: 'This merchandise is not registered for you.' });

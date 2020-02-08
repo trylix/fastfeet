@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import multer from 'multer';
 
+import CancelDeliveryController from './api/controllers/CancelDeliveryController';
 import DeliveriesController from './api/controllers/DeliveriesController';
 import DeliverymanController from './api/controllers/DeliverymanController';
+import DeliveryProblemController from './api/controllers/DeliveryProblemController';
 import FileController from './api/controllers/FileController';
 import MerchandiseController from './api/controllers/MerchandiseController';
 import RecipientController from './api/controllers/RecipientController';
@@ -34,10 +36,17 @@ routes.put(
   DeliveriesController.update
 );
 
+routes.post('/delivery/:id/problems', DeliveryProblemController.store);
+
 /*
  * Todas as rotas após o authMiddleware, passará por uma validação da sessão
  */
 routes.use(authMiddleware);
+
+routes.get('/delivery/problems', DeliveryProblemController.index);
+routes.get('/delivery/:id/problems', DeliveryProblemController.show);
+
+routes.delete('/problem/:id/cancel-delivery', CancelDeliveryController.delete);
 
 routes.post('/users', UserController.store);
 routes.put('/users', UserController.update);

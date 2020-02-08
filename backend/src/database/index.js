@@ -1,13 +1,21 @@
 import Sequelize from 'sequelize';
 
 import Deliveryman from '../api/models/Deliveryman';
+import DeliveryProblem from '../api/models/DeliveryProblem';
 import File from '../api/models/File';
 import Merchandise from '../api/models/Merchandise';
 import Recipient from '../api/models/Recipient';
 import User from '../api/models/User';
 import databaseConfig from '../config/database';
 
-const models = [User, Recipient, File, Deliveryman, Merchandise];
+const models = [
+  User,
+  Recipient,
+  File,
+  Deliveryman,
+  Merchandise,
+  DeliveryProblem,
+];
 
 class Database {
   constructor() {
