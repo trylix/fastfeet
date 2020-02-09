@@ -1,5 +1,9 @@
+/* eslint-disable eqeqeq */
 import * as Yup from 'yup';
 
+import Queue from '../../lib/Queue';
+import DeliveryCancellationMail from '../jobs/DeliveryCancellationMail';
+import NewDeliveryMail from '../jobs/NewDeliveryMail';
 import Deliveryman from '../models/Deliveryman';
 import Merchandise from '../models/Merchandise';
 import Recipient from '../models/Recipient';
@@ -34,25 +38,28 @@ class MerchandiseController {
 
     const { recipient_id, deliveryman_id } = req.body;
 
-    const recipientExists = await Recipient.findByPk(recipient_id);
+    const recipient = await Recipient.findByPk(recipient_id);
 
-    if (!recipientExists) {
+    if (!recipient) {
       return res.status(401).json({ error: 'Recipient does not exists.' });
     }
 
-    const deliverymanExists = await Deliveryman.findByPk(deliveryman_id);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-    if (!deliverymanExists) {
+    if (!deliveryman) {
       return res.status(400).json({ error: 'Delivery man does not exists.' });
     }
 
-    const { id, product } = await Merchandise.create(req.body);
+    const merchandise = await Merchandise.create(req.body);
 
-    /*
-     * to-do:
-     * send email to delivery man
-     * send notification (?)
-     */
+    await Queue.add(NewDeliveryMail.key, {
+      merchandise,
+      recipient,
+      deliveryman,
+      url: process.env.APP_URL,
+    });
+
+    const { id, product } = merchandise;
 
     return res.json({ id, recipient_id, deliveryman_id, product });
   }
@@ -117,14 +124,20 @@ class MerchandiseController {
   }
 
   async delete(req, res) {
-    const merchandise = await Merchandise.findByPk(req.params.id);
+    const merchandise = await Merchandise.getById(req.params.id);
 
     if (!merchandise) {
       return res.status(401).json({ error: 'Merchandise does not exist.' });
     }
 
     if (!merchandise.canceled_at) {
-      // send email to delivey man
+      merchandise.canceled_at = new Date();
+
+      await Queue.add(DeliveryCancellationMail.key, {
+        merchandise,
+        recipient: merchandise.recipient,
+        deliveryman: merchandise.deliveryman,
+      });
     }
 
     await merchandise.destroy();

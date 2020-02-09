@@ -1,3 +1,5 @@
+import Queue from '../../lib/Queue';
+import DeliveryCancellationMail from '../jobs/DeliveryCancellationMail';
 import DeliveryProblem from '../models/DeliveryProblem';
 import Merchandise from '../models/Merchandise';
 
@@ -25,7 +27,11 @@ class CancelDeliveryController {
 
     await merchandise.save();
 
-    // send email
+    await Queue.add(DeliveryCancellationMail.key, {
+      merchandise,
+      recipient: merchandise.recipient,
+      deliveryman: merchandise.deliveryman,
+    });
 
     return res.json(merchandise);
   }
